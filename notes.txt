@@ -1,0 +1,7 @@
+Things to note:
+  https://quasar-framework.org/guide/embedding-quasar.html
+  https://nuxtjs.org/guide/installation
+  https://github.com/express-vue/express-vue
+  https://vuejsdevelopers.com/2017/12/11/vue-ssr-router/
+
+  https://stackoverflow.com/questions/20544312/how-to-create-localhost-database-using-mysql
