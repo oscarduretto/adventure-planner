@@ -4,10 +4,10 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
-let indexRouter = require('./routes/index');
-let usersRouter = require('./routes/users');
-let expressVue = require("express-vue");
-
+const Vue = require('vue')
+const renderer = require('vue-server-renderer').createRenderer({
+  template: require('fs').readFileSync('./src/index.template.html', 'utf-8')
+})
 
 let app = express();
 
@@ -21,14 +21,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('*', (req, res) => {
+  const app = new Vue({
+    data: {
+      url: req.url
+    },
+    template: `<div>The visited URL is: {{ url }}</div>`
+  })
 
-// middleware
-const expressVueMiddleware = expressVue.init();
-app.use(expressVueMiddleware);
+  renderer.renderToString(app, (err, html) => {
+    if (err) {
+      res.status(500).end('Internal Server Error')
+      return
+    }
+    res.end(html);
+  })
+})
 
-// routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
